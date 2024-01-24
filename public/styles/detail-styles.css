@@ -1,0 +1,172 @@
+body {
+  display: flex;
+  justify-content: center;
+  font-family: arial, sans-serif;
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.backButton {
+  border-radius: 0.3rem;
+  font-size: 1rem;
+  text-align: center;
+  border: none;
+  outline: none;
+  padding: 0.3rem 0.6rem;
+}
+.pokemonInformationContainer {
+  width: 100%;
+  max-width: 62.5rem;
+  height: 100%;
+  padding: 1rem;
+  max-width: 50rem;
+}
+
+.pokemonDetail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  border-radius: 0.2rem;
+  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.1);
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 2rem;
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-around;
+    padding-bottom: 0;
+  }
+}
+.pokemonInfo {
+  width: 100%;
+  max-width: 16rem;
+  display: flex;
+  height: fit-content;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  @media (min-width: 768px) {
+    margin-bottom: 0;
+  }
+}
+.pokemonImage {
+  margin: auto;
+  width: 100%;
+}
+
+.pokemonNameTypeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pokemonNameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  gap: 0.2rem;
+  margin-bottom: 0.6rem;
+}
+.pokemonId {
+  font-size: 0.8rem;
+  font-style: italic;
+}
+.pokemonName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.pokemonTypesContainer {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.pokemonType {
+  padding: 0.2rem 0.6rem;
+  background: #000;
+  color: #fff;
+  border-radius: 0.2rem;
+}
+
+.pokemonStats {
+  padding: 1rem 2rem;
+  width: 100%;
+  max-width: 24rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border-radius: 0.2rem;
+  @media (min-width: 480px) {
+    width: 70%;
+  }
+}
+.statsRow {
+  gap: 0.1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.statBar {
+  width: 100%;
+  background-color: lightgrey;
+  overflow: hidden;
+  border-radius: 0.2rem;
+}
+
+.statBarBg {
+  background-color: darkcyan;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  display: flex;
+  min-height: 1rem;
+  align-items: center;
+  @media (min-width: 768px) {
+    min-height: 2rem;
+  }
+}
+
+.pokemonAbilities {
+  padding: 1rem;
+  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 0.2rem;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.abilitiesTitle {
+  font-weight: 600;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  @media (min-width: 768px) {
+    font-size: 2rem;
+  }
+}
+
+.ability {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.2rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.8rem;
+}
+
+.abilityName {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.abilityShortEffect {
+  font-size: 0.8rem;
+}
