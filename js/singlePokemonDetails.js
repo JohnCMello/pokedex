@@ -1,5 +1,7 @@
 (function () {
   const $backButton = document.querySelector('#backButton');
+  const $prevButton = document.querySelector('#prevButton');
+  const $nextButton = document.querySelector('#nextButton');
   const $pokemonInfo = document.querySelector('#pokemonInfoContainer');
   const $pokemonStats = document.querySelector('#pokemonStatsContainer');
   const $pokemonAbilities = document.querySelector(
@@ -14,6 +16,7 @@
     try {
       const response = await fetch(URL);
       const data = await response.json();
+      //create a  function to set the page title
       document.title = `Pokemon Details: ${
         data.name.charAt(0).toUpperCase() + data.name.slice(1)
       }`;
@@ -23,13 +26,18 @@
     }
   }
 
+  function updatePokemonId(newId) {
+    const url = window.location.href.split('?')[0] + `?id=${newId}`;
+    window.location.href = url;
+  }
+
   function createPokemonInfo(pokemonDetails) {
     const { name, id, sprites, types } = pokemonDetails;
     return `
         <figure>
           <img
             class="pokemonImage"
-            src="${sprites.front_default}"
+            src="${sprites.other['official-artwork'].front_default}"
             alt=""
           />
         </figure>
@@ -85,7 +93,7 @@
     };
 
     const abilitiesData = await Promise.all(abilities.map(fetchAbilitiesText));
-    console.log(abilitiesData);
+
     const pokemonsAbilities = abilitiesData
       .map((abilityData, index) => {
         if (!abilityData) return;
@@ -110,12 +118,9 @@
       `;
       })
       .join('');
+
     return pokemonsAbilities;
   }
-
-  $backButton.addEventListener('click', () => {
-    history.back();
-  });
 
   async function displaySinglePokemonDetails() {
     const pokemonDetail = await fetchSinglePokemon();
@@ -127,6 +132,35 @@
     $pokemonStats.innerHTML = pokemonStats;
     $pokemonAbilities.innerHTML = pokemonAbilities;
   }
+
+  function closestSmallerMultiplierOfSix(number) {
+    return Math.floor(number / 6) * 6;
+  }
+
+  //Events
+  $backButton.addEventListener('click', () => {
+    window.location.href = window.location.origin;
+  });
+
+  $prevButton.addEventListener('click', async () => {
+    const newId = parseInt(pokemonId, 10) - 1;
+    sessionStorage.setItem(
+      'pokemonListOffset',
+      closestSmallerMultiplierOfSix(newId)
+    );
+    if (newId > 0) {
+      updatePokemonId(newId);
+    }
+  });
+
+  $nextButton.addEventListener('click', async () => {
+    const newId = parseInt(pokemonId, 10) + 1;
+    sessionStorage.setItem(
+      'pokemonListOffset',
+      closestSmallerMultiplierOfSix(newId)
+    );
+    updatePokemonId(newId);
+  });
 
   displaySinglePokemonDetails();
 })();

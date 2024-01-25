@@ -16,21 +16,39 @@ body {
     border-radius: 1rem;
   }
 }
-
+/* Header */
 .header {
   display: flex;
   justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
 }
 
 .logoContainer {
   display: flex;
   width: fit-content;
   height: fit-content;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
 }
 
 .logoContainer .logo {
   height: 60px;
+}
+.searchContainer {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2rem;
+}
+.search {
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 22rem;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 0.2rem;
+  color: rgba(0, 0, 0, 0.7);
 }
 
 /* Pokemon list */

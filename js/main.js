@@ -1,9 +1,53 @@
 (function () {
   const $pokemonList = document.querySelector('#pokemonList');
   const $paginationContainer = document.querySelector('#pagination');
+  const $searchInput = document.querySelector('.search');
 
-  let offset = history.state ? history.state.offset : 0;
+  let navigatingToDetailPage = false;
+  let offset = sessionStorage.getItem('pokemonListOffset') || 0;
   const paginationLimit = 6;
+  let searchTimeout;
+
+  async function fetchSinglePokemon(query) {
+    try {
+      const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${query}`
+      );
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function displaySinglePokemon(query) {
+    const pokemon = await fetchSinglePokemon(query);
+    if (pokemon) {
+      $pokemonList.innerHTML = createPokemonCard(sanitizePokemon(pokemon));
+    }
+  }
+
+  function hidePagination() {
+    $paginationContainer.style.display = 'none';
+  }
+
+  function showPagination() {
+    $paginationContainer.style.display = 'flex';
+  }
+
+  function handleSearch() {
+    const query = $searchInput.value.trim();
+    clearTimeout(searchTimeout);
+    if (query === '') {
+      displayPokemonList();
+      showPagination();
+    } else {
+      searchTimeout = setTimeout(() => {
+        displaySinglePokemon(query);
+        hidePagination();
+      }, 1000);
+    }
+  }
 
   async function fetchPokemons(offset, limit) {
     try {
@@ -32,26 +76,28 @@
     }
   }
 
+  const sanitizePokemon = (pokemon) => {
+    const { name, id, types, stats, sprites } = pokemon;
+    const _types = types.map((type) => type.type.name);
+    const _stats = stats.map((stat) => {
+      return {
+        name: stat.stat.name,
+        value: stat.base_stat,
+      };
+    });
+    return {
+      name,
+      id,
+      types: _types,
+      stats: _stats,
+      image: sprites.other['official-artwork'].front_default,
+    };
+  };
+
   async function sanitizePokemonListDetails(pokemonDetails) {
     try {
       const pokemonResults = await pokemonDetails;
-      const _pokemonDetails = pokemonResults.map((pokemon) => {
-        const { name, id, types, stats, sprites } = pokemon;
-        const _types = types.map((type) => type.type.name);
-        const _stats = stats.map((stat) => {
-          return {
-            name: stat.stat.name,
-            value: stat.base_stat,
-          };
-        });
-        return {
-          name,
-          id,
-          types: _types,
-          stats: _stats,
-          image: sprites.other['official-artwork'].front_default,
-        };
-      });
+      const _pokemonDetails = pokemonResults.map(sanitizePokemon);
       return _pokemonDetails;
     } catch (error) {
       console.log(error);
@@ -61,12 +107,9 @@
   function handlePokemonCardClick(index) {
     const selectedPokemon = document.querySelectorAll('.pokemonCard')[index];
     const pokemonId = selectedPokemon.getAttribute('data-pokemon-id');
-    const currentState = {
-      offset: offset,
-    };
 
-    // Use replaceState instead of pushState to overwrite the current state
-    history.replaceState(currentState, null);
+    sessionStorage.setItem('pokemonListOffset', offset);
+    navigatingToDetailPage = true;
     window.location.href = `pokemonDetail.html?id=${pokemonId}`;
   }
 
@@ -123,13 +166,12 @@
         offset = Math.max(0, offset - paginationLimit);
         displayPokemonList();
       } else if (target.id === 'nextPage') {
-        offset += paginationLimit;
+        const currentPage = offset / paginationLimit + 1;
+        offset = currentPage * paginationLimit;
         displayPokemonList();
       }
     }
   }
-
-  $paginationContainer.addEventListener('click', handlePaginationClick);
 
   async function updatePagination() {
     const { count } = await fetchPokemons();
@@ -142,48 +184,56 @@
   function createPokemonCard(pokemon) {
     return `
     <li class="pokemonCard ${pokemon.types[0]}" data-pokemon-id=${pokemon.id}>
-      <figure class="pokemonImage">
-        <img src="${pokemon.image}" alt="${pokemon.name}" />
-      </figure>
-      <article class="pokemonInfoContainer">
-        <div class="pokemonInfo">
-          <span class="pokemonName">${pokemon.name}</span>
-          <span class="pokemonNumber">#${Number(pokemon.id)
-            .toString()
-            .padStart(3, '0')}</span>
+    <figure class="pokemonImage">
+    <img src="${pokemon.image}" alt="${pokemon.name}" />
+    </figure>
+    <article class="pokemonInfoContainer">
+    <div class="pokemonInfo">
+    <span class="pokemonName">${pokemon.name}</span>
+    <span class="pokemonNumber">#${Number(pokemon.id)
+      .toString()
+      .padStart(3, '0')}</span>
+      </div>
+      <div class="pokemonTypes">
+      ${pokemon.types
+        .map((type) => `<span class="pokemonType ${type}">${type}</span>`)
+        .join('')}
         </div>
-        <div class="pokemonTypes">
-          ${pokemon.types
-            .map((type) => `<span class="pokemonType ${type}">${type}</span>`)
-            .join('')}
-        </div>
-      </article>
-      <article class="pokemonStats">
+        </article>
+        <article class="pokemonStats">
         ${pokemon.stats
           .map(
             (stat) => `
-          <div class="statsRow">
+            <div class="statsRow">
             <span class="statLabel">${stat.name}</span>
             <div class="statBar">
-              <div class="statBarBg" style="width: ${
-                (100 * stat.value) / 250
-              }%"">
-                <span class="statValue">${stat.value}</span>
-              </div>
+            <div class="statBarBg" style="width: ${(100 * stat.value) / 250}%"">
+            <span class="statValue">${stat.value}</span>
             </div>
-          </div>`
+            </div>
+            </div>`
           )
           .join('')}
-      </article>
-    </li>
-  `;
+            </article>
+            </li>
+            `;
   }
-  window.addEventListener('popstate', function (event) {
-    if (event.state) {
-      offset = event.state.offset;
-      displayPokemonList();
+
+  //Events
+  $paginationContainer.addEventListener('click', handlePaginationClick);
+
+  $searchInput.addEventListener('input', handleSearch);
+
+  window.addEventListener('beforeunload', function (event) {
+    if (event.target.location.href !== window.location.href) {
+      if (!navigatingToDetailPage) {
+        sessionStorage.removeItem('pokemonListOffset');
+      }
+    } else if (event.target.location.href === window.location.href) {
+      if (!navigatingToDetailPage) {
+        sessionStorage.removeItem('pokemonListOffset');
+      }
     }
   });
-
   displayPokemonList();
 })();
