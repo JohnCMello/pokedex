@@ -45,7 +45,7 @@
       searchTimeout = setTimeout(() => {
         displaySinglePokemon(query);
         hidePagination();
-      }, 1000);
+      }, 500);
     }
   }
 

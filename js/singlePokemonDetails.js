@@ -2,6 +2,7 @@
   const $backButton = document.querySelector('#backButton');
   const $prevButton = document.querySelector('#prevButton');
   const $nextButton = document.querySelector('#nextButton');
+  const $pokemonDetail = document.querySelector('#pokemonDetail');
   const $pokemonInfo = document.querySelector('#pokemonInfoContainer');
   const $pokemonStats = document.querySelector('#pokemonStatsContainer');
   const $pokemonAbilities = document.querySelector(
@@ -33,6 +34,8 @@
 
   function createPokemonInfo(pokemonDetails) {
     const { name, id, sprites, types } = pokemonDetails;
+    $pokemonDetail.classList.add(`single--${types[0].type.name}`);
+    console.log($pokemonDetail);
     return `
         <figure>
           <img
