@@ -142,8 +142,10 @@
 
   //Events
   $backButton.addEventListener('click', () => {
-    if (window.location.href.includes('github.io'))
-      return (window.location.href = `${window.location.origin}/pokedex/`);
+    if (window.location.href.includes('github.io')) {
+      window.location.href = `${window.location.origin}/pokedex/`;
+      return;
+    }
     window.location.href = window.location.origin;
   });
 
