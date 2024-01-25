@@ -12,12 +12,26 @@ O Projeto Pokédex é uma aplicação web simples que utiliza HTML, CSS e JavaSc
 
 ## Como Executar o Projeto
 
-1. Certifique-se de ter o [Visual Studio Code (VSCode)](https://code.visualstudio.com/) instalado em seu computador.
-2. Instale a extensão Live Server no VSCode. Você pode fazer isso acessando o menu de extensões do VSCode e procurando por "Live Server". Instale e ative a extensão.
-3. Baixe os arquivos do projeto para o seu computador.
-4. No VSCode, abra o arquivo `index.html` do projeto.
-5. Clique com o botão direito do mouse no arquivo `index.html` e selecione a opção "Open with Live Server" para iniciar o servidor.
+1. Certifique-se de ter o [Node.js](https://nodejs.org/) instalado em seu computador.
+2. Baixe os arquivos do projeto para o seu computador.
+3. Abra o terminal e navegue até o diretório do projeto.
+4. Execute o seguinte comando para instalar as dependências:
+
+```bash
+npm install -g live-server
+```
+
+5. Após a instalação das dependências, execute o seguinte comando para iniciar o servidor:
+
+```bash
+npx live-server
+```
+
 6. O navegador padrão será aberto automaticamente exibindo a aplicação.
+
+## Acesso Online
+
+Este projeto também está hospedado no GitHub Pages e pode ser acessado através do seguinte link: [Projeto Pokédex](https://johncmello.github.io/pokedex/).
 
 ## Tecnologias Utilizadas
 

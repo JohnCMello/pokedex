@@ -35,7 +35,6 @@
   function createPokemonInfo(pokemonDetails) {
     const { name, id, sprites, types } = pokemonDetails;
     $pokemonDetail.classList.add(`single--${types[0].type.name}`);
-    console.log($pokemonDetail);
     return `
         <figure>
           <img
